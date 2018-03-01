@@ -1,41 +1,59 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title</title>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width" />
+	<title>@ViewBag.Title</title>
+	@Styles.Render("~/Content/css")
+
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, null)</li>
-                    <li>@Html.ActionLink("API", "Index", "Help", new { area = "" }, null)</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
-    </div>
+	<table border="0" cellpadding="0" cellspacing="0" align="center" class="deviceWidth" style="border-collapse: collapse; color: rgb(0, 0, 0); font-family: Calibri, Arial, Times, serif;">
+		<tbody>
+			<tr>
+				<td align="left" valign="top" class="tagline-height">
+					<table style="width:100%">
+						<tr>
+							<td align="left" valign="bottom">
+								<p style="margin: 0px; text-align: left; vertical-align: bottom;"><font color="#dc0238" face="Calibri, Arial, serif"><span style="font-size: 24px;">[</span></font><font color="#555559" face="Calibri, Arial, serif"><span style="font-size: 24px;">&nbsp;MAILBOX USAGE SURVEY&nbsp;</span></font><font color="#dc0238" face="Calibri, Arial, serif"><span style="font-size: 24px;">]</span></font></p>
+							</td>
+							<td align="right" valign="bottom">
+								<a href="#" alt="Arkadin" class="devicecenter" border="0" style="display: block; border: 0px; padding: 10px 0px 0px 20px;">
+									<img src="~/Images/logo.png" />
+								</a>
+							</td>
+						</tr>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+					</table>
+				</td>
+
+			</tr>
+			<tr>
+				<td bgcolor="#dc0238" style="margin-top:10px;">
+					<div style="height: 14px;">&nbsp;</div>
+				</td>
+			</tr>
+			
+
+			<tr>
+				<td bgcolor="#ffffff" align="left" valign="bottom" class="center" style="padding: 10px 0px;">
+
+					<p style="font-family: Calibri, Arial, serif; font-size: 14px; color: rgb(85, 85, 89);">Dear&nbsp;<b>Mayank</b>,</p>
+					<p style="font-family: Calibri, Arial, serif; font-size: 14px; color: rgb(85, 85, 89);">
+						In Order to migrate your Mailbox to Office365, we would like to know if you are using the following mailboxes:
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td bgcolor="#ffffff" style="padding: 0px 20px 20px;">
+					@RenderBody()
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	@Scripts.Render("~/bundles/jquery")
+	@Scripts.Render("~/bundles/bootstrap")
+	@RenderSection("scripts", required: false)
 </body>
 </html>
