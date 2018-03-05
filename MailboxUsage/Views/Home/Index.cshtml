@@ -1,9 +1,87 @@
-﻿
+﻿@model  IEnumerable<MailboxUsage.Models.Usage>
 <div class="row">
-	@*<p style="font-family: Calibri, Arial, serif; font-size: 14px; color: rgb(85, 85, 89);">Dear&nbsp;<b>Mayank</b>,</p>
-	<p style="font-family: Calibri, Arial, serif; font-size: 14px; color: rgb(85, 85, 89);">We unfortunately do not hold your emergency contact details in your profile yet. It is imperative that we gather this information as soon as possible for your security.</p>
-	<p style="font-family: Calibri, Arial, serif; font-size: 14px; color: rgb(85, 85, 89);">You can complete this information at any time on your TS Homepage in the Free Access Forms widget, using the &quot;<b>Update my emergency contact details</b>&quot; form. Please ensure to Submit your form once completed.</p>
-	<p style="font-family: Calibri, Arial, serif; font-size: 14px; color: rgb(85, 85, 89);">If you have any technical difficulties, please do not hesitate to contact us.</p>
-	<p style="font-family: Calibri, Arial, serif; font-size: 14px; color: rgb(85, 85, 89);">Kind Regards,</p>
-	<p style="font-family: Calibri, Arial, serif; font-size: 14px; color: rgb(85, 85, 89);"><b>Your HR Correspondent</b></p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301872">Learn more &raquo;</a></p>*@
+	@using (Html.BeginForm("Savedata", "Home", FormMethod.Post))
+	{
+		<table class="table table-hover table-bordered table-responsive" id="tblUsage">
+			<thead>
+				<tr>
+				
+					<th>MUID</th>
+					<th>Mailbox Name</th>
+					<th>Yes</th>
+					<th>No</th>
+					<th>I don't know</th>
+				</tr>
+			</thead>
+			<tbody>
+				@{
+					int count = 0;
+					string group = "usage";
+					foreach (var item in Model)
+					{
+						group = group + count.ToString();
+						<tr>
+							<td>
+								@Html.HiddenFor(x => item.MboxID, new { @id = "MBoxID" + count.ToString() })
+								@Html.DisplayFor(m => item.UMID, new { @id = "UMID" + count.ToString() })
+							</td>
+							<td>@Html.DisplayFor(m => item.MailboxName, new { @id = "MailboxName" + count.ToString() }) </td>
+							<td>
+								@Html.RadioButtonFor(m => item.IUsed, item.IUsed,  new { @id = "IUsed" + count.ToString(), @Name = group,  })
+							</td>
+							<td>
+								@Html.RadioButtonFor(m => item.IDontUse, item.IDontUse, new { @id = "IDontUse" + count.ToString(), @Name = group })
+							</td>
+							<td>
+								@Html.RadioButtonFor(m => item.IDontKnow, item.IDontKnow, new { @id = "IDontKnow" + count.ToString(), @Name = group })
+							</td>
+							@{ count = count + 1;
+							}
+						</tr>
+
+					}
+				}
+			</tbody>
+		</table>
+
+		<div style="align-items:center;text-align:right">
+			<input id="btnSave" type="button" value="Submit" class="btn btn-danger right" />
+		</div>
+	}
 </div>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
+<script type="text/javascript">
+
+	$("body").on("click", "#btnSave", function () {
+		alert('hello');
+		//Loop through the Table rows and build a JSON array.
+		var usages = new Array();
+		var count = 0;
+		$("#tblUsage TBODY TR").each(function () {
+			debugger;
+			var row = $(this);
+			var usage = {};
+			usage.MboxID = $("#MBoxID" + count).val();//row.find("TD").eq(0)[0].children[0].value;
+			usage.UMID = $("#UMID" + count).val();
+			usage.IUsed = $("#IUsed" + count).is(":checked");
+			usage.IDontUse = $("#IDontUse" + count).is(":checked");
+			usage.IDontKnow = $("#IDontKnow" + count).is(":checked");
+			usages.push(usage);
+			count++;
+		});
+
+		//Send the JSON array to Controller using AJAX.
+		$.ajax({
+			type: "POST",
+			url: "/Home/Savedata",
+			data: JSON.stringify(usages),
+			contentType: "application/json; charset=utf-8",
+			dataType: "json",
+			success: function (r) {
+				alert(r + " record(s) inserted.");
+			}
+		});
+	});
+</script>

@@ -28,6 +28,7 @@
     <Property Name="UMID" Type="nvarchar(max)" Nullable="false" />
     <Property Name="ValueID" Type="nvarchar(max)" Nullable="false" />
     <Property Name="LastUpdated" Type="datetime" Nullable="true" />
+    <Property Name="UUID" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
   <EntityType Name="SharedMailboxes">
     <Key>
@@ -73,6 +74,7 @@
           <Property Name="UMID" Type="String" Nullable="false" />
           <Property Name="ValueID" Type="String" Nullable="false" />
           <Property Name="LastUpdated" Type="DateTime" Nullable="true" />
+          <Property Name="UUID" Nullable="false" Type="String" />
         </EntityType>
         <EntityType Name="SharedMailbox">
           <Key>
@@ -114,6 +116,7 @@
           <ScalarProperty Name="UMID" ColumnName="UMID" />
           <ScalarProperty Name="ValueID" ColumnName="ValueID" />
           <ScalarProperty Name="LastUpdated" ColumnName="LastUpdated" />
+          <ScalarProperty Name="UUID" ColumnName="UUID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

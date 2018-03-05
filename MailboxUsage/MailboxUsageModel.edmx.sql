@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 03/01/2018 17:19:09
+-- Date Created: 03/05/2018 11:44:41
 -- Generated from EDMX file: D:\Projects\Mailbox Usage\MailboxUsage\MailboxUsage\MailboxUsageModel.edmx
 -- --------------------------------------------------
 
@@ -53,7 +53,8 @@ CREATE TABLE [dbo].[Mailboxes] (
     [Id] int IDENTITY(1,1) NOT NULL,
     [UMID] nvarchar(max)  NOT NULL,
     [ValueID] nvarchar(max)  NOT NULL,
-    [LastUpdated] datetime  NULL
+    [LastUpdated] datetime  NULL,
+    [UUID] nvarchar(max)  NOT NULL
 );
 GO
 

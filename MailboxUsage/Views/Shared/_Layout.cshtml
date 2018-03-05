@@ -4,8 +4,8 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width" />
 	<title>@ViewBag.Title</title>
-	@Styles.Render("~/Content/css")
-
+	
+	<link href="~/Content/bootstrap.css" rel="stylesheet" />
 </head>
 <body>
 	<table border="0" cellpadding="0" cellspacing="0" align="center" class="deviceWidth" style="border-collapse: collapse; color: rgb(0, 0, 0); font-family: Calibri, Arial, Times, serif;">
@@ -38,7 +38,7 @@
 			<tr>
 				<td bgcolor="#ffffff" align="left" valign="bottom" class="center" style="padding: 10px 0px;">
 
-					<p style="font-family: Calibri, Arial, serif; font-size: 14px; color: rgb(85, 85, 89);">Dear&nbsp;<b>Mayank</b>,</p>
+					<p style="font-family: Calibri, Arial, serif; font-size: 14px; color: rgb(85, 85, 89);">Dear&nbsp;<b>@ViewBag.UserName</b>,</p>
 					<p style="font-family: Calibri, Arial, serif; font-size: 14px; color: rgb(85, 85, 89);">
 						In Order to migrate your Mailbox to Office365, we would like to know if you are using the following mailboxes:
 					</p>
@@ -52,8 +52,7 @@
 		</tbody>
 	</table>
 
-	@Scripts.Render("~/bundles/jquery")
-	@Scripts.Render("~/bundles/bootstrap")
+
 	@RenderSection("scripts", required: false)
 </body>
 </html>

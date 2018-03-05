@@ -18,5 +18,6 @@ namespace MailboxUsage
         public string UMID { get; set; }
         public string ValueID { get; set; }
         public Nullable<System.DateTime> LastUpdated { get; set; }
+        public string UUID { get; set; }
     }
 }
