@@ -1,5 +1,10 @@
 ﻿@{
-    ViewBag.Title = "Result";
+	ViewBag.Title = "Thank You!";
 }
 
-<h2>@ViewBag.Messages</h2>
+<br />
+<h2> Thanks for your response.Your response has been successfully saved.</h2>
+<br />
+<div style="align-items:center;text-align:center">
+	@Html.ActionLink("Go Back", "GoBack", "Home", new { @class = "btn btn-danger right"})
+</div>

@@ -1,0 +1,76 @@
+﻿@model  IEnumerable<MailboxUsage.Models.Usage>
+<div class="row">
+
+	<table class="table table-hover table-bordered table-responsive" id="tblUsage">
+		<thead>
+			<tr>
+				<th>Mailbox Name</th>
+				<th>Mailbox Email</th>
+				<th>Yes</th>
+				<th>No</th>
+				<th>I don't know</th>
+			</tr>
+		</thead>
+		<tbody>
+			@{
+				int count = 0;
+				string group = "usage";
+				foreach (var item in Model)
+				{
+					group = group + count.ToString();
+					<tr>
+
+						<td>
+							@Html.DisplayFor(m => item.MailboxName, new { @id = "MailboxName" + count.ToString() })
+						</td>
+						<td>
+							@Html.DisplayFor(m => item.MailboxEmail, new { @id = "MailboxEmail" + count.ToString() })
+						</td>
+
+						<td>
+							@{
+								if (item.IUsed)
+								{
+									@Html.RadioButtonFor(m => item.IUsed, "IUsed", new { @id = "IUsed" + count.ToString(), @Name = group, @checked = "checked" })
+								}
+								else
+								{
+									@Html.RadioButtonFor(m => item.IUsed, "IUsed", new { @id = "IUsed" + count.ToString(), @Name = group })
+								}
+							}
+
+						</td>
+						<td>
+							@{
+								if (item.IDontUse)
+								{
+									@Html.RadioButtonFor(m => item.IDontUse, "IDontUse", new { @id = "IDontUse" + count.ToString(), @Name = group, @checked = "checked" })
+								}
+								else
+								{
+									@Html.RadioButtonFor(m => item.IDontUse, "IDontUse", new { @id = "IDontUse" + count.ToString(), @Name = group })
+								}
+							}
+
+						</td>
+						<td>
+							@{
+								if (item.IDontKnow)
+								{
+									@Html.RadioButtonFor(m => item.IDontUse, "IDontKnow", new { @id = "IDontKnow" + count.ToString(), @Name = group, @checked = "checked" })
+								}
+								else
+								{
+									@Html.RadioButtonFor(m => item.IDontUse, "IDontKnow", new { @id = "IDontKnow" + count.ToString(), @Name = group })
+								}
+							}
+						</td>
+						@{ count = count + 1;
+						}
+					</tr>
+
+				}
+			}
+		</tbody>
+	</table>
+</div>

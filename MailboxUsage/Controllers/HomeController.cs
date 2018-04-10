@@ -1,101 +1,83 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using MailboxUsage.HelperClasses;
 using MailboxUsage.Models;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Web.Mvc;
 namespace MailboxUsage.Controllers
 {
-	public class HomeController : Controller
+    public class HomeController : Controller
+    {
+
+	public ActionResult Index()
 	{
-		private MailboxUsageModelContainer _mailboxes = new MailboxUsageModelContainer();
-		public ActionResult Index()
-		{
-			List<Usage> lstUsage = new List<Usage>();
-			if (Request.QueryString["UUID"] != null)
-			{
-				string UUID = Request.QueryString["UUID"].ToString();
-				ViewBag.UserName = _mailboxes.Users.Where(x => x.UUID == UUID).FirstOrDefault().FullName;
-
-				var usages = (from mb in _mailboxes.Mailboxes
-							  join sh in _mailboxes.SharedMailboxes on mb.UMID equals sh.UMID
-							  join va in _mailboxes.Values on mb.ValueID equals va.ValueID
-							  where mb.UUID.Equals(UUID)
-							  orderby sh.Id
-							  select new
-							  {
-								  mb.Id,
-								  sh.MailboxName,
-								  mb.ValueID,
-								  mb.UMID
-							  }).ToList();
-
-				foreach (var item in usages)
-				{
-					Usage usage = new Usage();
-					usage.MboxID = item.Id;
-					usage.MailboxName = item.MailboxName;
-					usage.UMID = item.UMID;
-					if(item.ValueID == "1")
-					{
-						usage.IUsed = true;
-						usage.IDontUse = usage.IDontKnow = false;
-					}
-					else if (item.ValueID == "2")
-					{
-						usage.IDontUse = true;
-						usage.IUsed = usage.IDontKnow = false;
-					}
-					else if (item.ValueID == "3")
-					{
-						usage.IDontKnow = true;
-						usage.IUsed = usage.IDontUse = false;
-					}
-					//usage.ValueID = item.ValueID;
-					lstUsage.Add(usage);
-				}
-			}
-
-
-
-			ViewBag.Title = "Mailbox Usgae Survey";
-
-			return View(lstUsage);
-		}
-
-		[HttpPost]
-		public ActionResult Savedata(List<Usage> lstUsage, FormCollection form)
-		{
-			try
-			{
-				foreach (var item in lstUsage)
-				{
-					Mailbox mBox = _mailboxes.Mailboxes.Find(item.MboxID);
-					if (item.IUsed)
-					{
-						mBox.ValueID = "1";
-					}
-					else if (item.IDontUse)
-					{
-						mBox.ValueID = "2";
-					}
-					else if (item.IDontKnow)
-					{
-						mBox.ValueID = "3";
-					}
-					mBox.LastUpdated = DateTime.Now;
-
-				}
-				_mailboxes.SaveChanges();
-				ViewBag.Messages = "Thanks for submitting data.Your data has been successfully saved.";
-			}
-			catch (Exception)
-			{
-				ViewBag.Messages = "Some error occurred. Please try again.";
-			}
-			
-			return View("Result");
-		}
+	    List<Usage> lstUsage = new List<Usage>();
+	    UsageHelper helper = new UsageHelper();
+	    string UUID = Request.QueryString["UUID"] != null ? Request.QueryString["UUID"].ToString() : string.Empty;
+	    TempData["UserName"] = helper.GetUserName(UUID);
+	    Session["UserID"] = UUID;
+	    lstUsage = helper.GetListofMailbox(UUID);
+	    ViewBag.Title = "Mailbox Usage Survey";
+	    return View(lstUsage);
 	}
+
+	[HttpPost]
+	public async Task<ActionResult> Savedata(List<Usage> lstUsage)
+	{
+	    UsageHelper helper = new UsageHelper();
+	    try
+	    {
+		bool res = await helper.SaveData(lstUsage);
+		if (res)
+		{
+		    ViewBag.Messages = "Thanks for submitting data.Your data has been successfully saved.";
+		    return Json(new { redirectTo = Url.Action("Result", "Home") }, JsonRequestBehavior.AllowGet);
+		}
+		else
+		{
+		    ViewBag.Messages = "Not able to update the data now. Please try again after some time.";
+		    return Json(new { redirectTo = Url.Action("Result", "Home") }, JsonRequestBehavior.AllowGet);
+		}
+
+	    }
+	    catch (Exception ex)
+	    {
+		ViewBag.Messages = "Some error occurred. Please try again. " + ex.Message;
+		return Json(new { redirectTo = Url.Action("Result", "Home") }, JsonRequestBehavior.AllowGet);
+	    }
+	}
+
+	public async Task<ActionResult> ViewUserDetails()
+	{
+	    UsageHelper helper = new UsageHelper();
+	    List<User> user = await helper.GetListOfUsers();
+	    if (user != null && user.Count > 0)
+	    {
+		SelectList selectList = new SelectList(user, "UserID", "FullName");
+		ViewBag.USERS = selectList;
+	    }
+	    ViewBag.Title = "User Details";
+	    return View();
+	}
+
+	public ActionResult _DisplayUserDetails(string UserID)
+	{
+	    List<Usage> lstUsage = new List<Usage>();
+	    UsageHelper helper = new UsageHelper();
+	    lstUsage = helper.GetListofMailbox(UserID);
+	    return PartialView(lstUsage);
+	}
+
+	public ActionResult Result()
+	{
+	    ViewBag.Title = "Thank You!";
+	    return View();
+	}
+
+	public ActionResult GoBack()
+	{
+	    return RedirectToAction("Index", new { UUID = Session["UserID"] != null ? Session["UserID"].ToString() : string.Empty});
+	}
+    }
 
 }

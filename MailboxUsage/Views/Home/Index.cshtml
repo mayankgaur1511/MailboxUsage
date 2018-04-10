@@ -1,87 +1,113 @@
 ﻿@model  IEnumerable<MailboxUsage.Models.Usage>
-<div class="row">
-	@using (Html.BeginForm("Savedata", "Home", FormMethod.Post))
+
+@{
+	if (@Model.Count() > 0)
 	{
-		<table class="table table-hover table-bordered table-responsive" id="tblUsage">
-			<thead>
-				<tr>
-				
-					<th>MUID</th>
-					<th>Mailbox Name</th>
-					<th>Yes</th>
-					<th>No</th>
-					<th>I don't know</th>
-				</tr>
-			</thead>
-			<tbody>
-				@{
-					int count = 0;
-					string group = "usage";
-					foreach (var item in Model)
-					{
-						group = group + count.ToString();
-						<tr>
-							<td>
-								@Html.HiddenFor(x => item.MboxID, new { @id = "MBoxID" + count.ToString() })
-								@Html.DisplayFor(m => item.UMID, new { @id = "UMID" + count.ToString() })
-							</td>
-							<td>@Html.DisplayFor(m => item.MailboxName, new { @id = "MailboxName" + count.ToString() }) </td>
-							<td>
-								@Html.RadioButtonFor(m => item.IUsed, item.IUsed,  new { @id = "IUsed" + count.ToString(), @Name = group,  })
-							</td>
-							<td>
-								@Html.RadioButtonFor(m => item.IDontUse, item.IDontUse, new { @id = "IDontUse" + count.ToString(), @Name = group })
-							</td>
-							<td>
-								@Html.RadioButtonFor(m => item.IDontKnow, item.IDontKnow, new { @id = "IDontKnow" + count.ToString(), @Name = group })
-							</td>
-							@{ count = count + 1;
-							}
-						</tr>
+		<div class="row" id="divData">
+			<div bgcolor="#ffffff" align="left" valign="bottom" class="center" style="padding: 10px 0px;">
 
+				<p style="font-family: Calibri, Arial, serif; font-size: 14px; color: rgb(85, 85, 89);">Dear&nbsp;<b>@TempData["UserName"].ToString()</b>,</p>
+				<p style="font-family: Calibri, Arial, serif; font-size: 14px; color: rgb(85, 85, 89);">
+					In Order to migrate your Mailbox to Office365, we would like to know if you are using the following mailboxes:
+				</p>
+			</div>
+
+			<table class="table table-hover table-bordered table-responsive" id="tblUsage">
+				<thead>
+					<tr>
+						<th>Mailbox Name</th>
+						<th>Mailbox Email</th>
+						<th>Yes</th>
+						<th>No</th>
+						<th>I don't know</th>
+					</tr>
+				</thead>
+				<tbody>
+					@{
+						int count = 0;
+						string group = "usage";
+						foreach (var item in Model)
+						{
+							group = group + count.ToString();
+							<tr>
+								
+								<td>
+									@Html.HiddenFor(m => item.MboxID, new { @id = "MboxID" + count.ToString() })
+									@Html.DisplayFor(m => item.MailboxName, new { @id = "MailboxName" + count.ToString() })
+								</td>
+								<td>
+									@Html.DisplayFor(m => item.MailboxEmail, new { @id = "MailboxEmail" + count.ToString() })
+								</td>
+
+								<td>
+									@{
+										if (item.IUsed)
+										{
+											@Html.RadioButtonFor(m => item.IUsed, "IUsed", new { @id = "IUsed" + count.ToString(), @Name = group, @checked = "checked" })
+										}
+										else
+										{
+											@Html.RadioButtonFor(m => item.IUsed, "IUsed", new { @id = "IUsed" + count.ToString(), @Name = group })
+										}
+									}
+
+								</td>
+								<td>
+									@{
+										if (item.IDontUse)
+										{
+											@Html.RadioButtonFor(m => item.IDontUse, "IDontUse", new { @id = "IDontUse" + count.ToString(), @Name = group, @checked = "checked" })
+										}
+										else
+										{
+											@Html.RadioButtonFor(m => item.IDontUse, "IDontUse", new { @id = "IDontUse" + count.ToString(), @Name = group })
+										}
+									}
+
+								</td>
+								<td>
+									@{
+										if (item.IDontKnow)
+										{
+											@Html.RadioButtonFor(m => item.IDontUse, "IDontKnow", new { @id = "IDontKnow" + count.ToString(), @Name = group, @checked = "checked" })
+										}
+										else
+										{
+											@Html.RadioButtonFor(m => item.IDontUse, "IDontKnow", new { @id = "IDontKnow" + count.ToString(), @Name = group })
+										}
+									}
+								</td>
+								@{ count = count + 1;
+								}
+							</tr>
+
+						}
 					}
-				}
-			</tbody>
-		</table>
+				</tbody>
+			</table>
 
-		<div style="align-items:center;text-align:right">
-			<input id="btnSave" type="button" value="Submit" class="btn btn-danger right" />
+			<div style="align-items:center;text-align:right">
+				<input id="btnSave" type="button" value="Submit" class="btn btn-danger right" />
+			</div>
 		</div>
 	}
+	else
+	{
+		<div id="divNoData" class="row">
+			<p>No record found, Please try again with valid User ID.</p>
+		</div>
+	}
+
+}
+
+<div id="fade"></div>
+<div id="modal" style="display:none">
+	<p>
+		An update is in progress. Please wait....
+	</p>
+	<img id="loader" src="~/Images/loading1.gif" />
 </div>
 
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-<script type="text/javascript" src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
-<script type="text/javascript">
-
-	$("body").on("click", "#btnSave", function () {
-		alert('hello');
-		//Loop through the Table rows and build a JSON array.
-		var usages = new Array();
-		var count = 0;
-		$("#tblUsage TBODY TR").each(function () {
-			debugger;
-			var row = $(this);
-			var usage = {};
-			usage.MboxID = $("#MBoxID" + count).val();//row.find("TD").eq(0)[0].children[0].value;
-			usage.UMID = $("#UMID" + count).val();
-			usage.IUsed = $("#IUsed" + count).is(":checked");
-			usage.IDontUse = $("#IDontUse" + count).is(":checked");
-			usage.IDontKnow = $("#IDontKnow" + count).is(":checked");
-			usages.push(usage);
-			count++;
-		});
-
-		//Send the JSON array to Controller using AJAX.
-		$.ajax({
-			type: "POST",
-			url: "/Home/Savedata",
-			data: JSON.stringify(usages),
-			contentType: "application/json; charset=utf-8",
-			dataType: "json",
-			success: function (r) {
-				alert(r + " record(s) inserted.");
-			}
-		});
-	});
-</script>
+<script type="text/javascript" src="~/Scripts/JQuery.js"></script>
+<script type="text/javascript" src="~/Scripts/Json2.js"></script>
+<script src="~/Scripts/Usage.js" type="text/javascript"></script>

@@ -7,17 +7,21 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MailboxUsage
+namespace MailboxUsage.Models
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class Mailbox
+    public partial class Using
     {
-        public int Id { get; set; }
-        public string UMID { get; set; }
-        public string ValueID { get; set; }
+        public int ID { get; set; }
+        public string MailboxID { get; set; }
+        public string UserID { get; set; }
+        public Nullable<int> StatusID { get; set; }
         public Nullable<System.DateTime> LastUpdated { get; set; }
-        public string UUID { get; set; }
+    
+        public virtual Mailbox Mailbox { get; set; }
+        public virtual UsageStatu UsageStatu { get; set; }
+        public virtual User User { get; set; }
     }
 }

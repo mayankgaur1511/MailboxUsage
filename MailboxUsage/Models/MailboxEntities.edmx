@@ -1,0 +1,318 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="MailboxUsageModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Mailbox">
+          <Key>
+            <PropertyRef Name="MailboxID" />
+          </Key>
+          <Property Name="MailboxID" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="MailboxName" Type="nvarchar" MaxLength="60" Nullable="false" />
+          <Property Name="MailboxEmail" Type="nvarchar" MaxLength="60" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'MailboxUsage.dbo.MailboxSendAs' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="MailboxSendAs">
+          <Key>
+            <PropertyRef Name="MailboxID" />
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="MailboxID" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="MailboxName" Type="nvarchar" MaxLength="50" />
+          <Property Name="MailboxEmail" Type="nvarchar" MaxLength="50" />
+          <Property Name="UserID" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="150" />
+          <Property Name="UserEmail" Type="nvarchar" MaxLength="150" />
+          <Property Name="DelegateAccess" Type="nvarchar" MaxLength="25" />
+        </EntityType>
+        <EntityType Name="UsageStatus">
+          <Key>
+            <PropertyRef Name="StatusID" />
+          </Key>
+          <Property Name="StatusID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StatusName" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="nvarchar" MaxLength="60" Nullable="false" />
+          <Property Name="FullName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Email" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Using">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MailboxID" Type="nvarchar" MaxLength="50" />
+          <Property Name="UserID" Type="nvarchar" MaxLength="60" />
+          <Property Name="StatusID" Type="int" />
+          <Property Name="LastUpdated" Type="datetime" />
+        </EntityType>
+        <Association Name="FK_Using_Mailbox">
+          <End Role="Mailbox" Type="Self.Mailbox" Multiplicity="0..1" />
+          <End Role="Using" Type="Self.Using" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Mailbox">
+              <PropertyRef Name="MailboxID" />
+            </Principal>
+            <Dependent Role="Using">
+              <PropertyRef Name="MailboxID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Using_UsageStatus">
+          <End Role="UsageStatus" Type="Self.UsageStatus" Multiplicity="0..1" />
+          <End Role="Using" Type="Self.Using" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UsageStatus">
+              <PropertyRef Name="StatusID" />
+            </Principal>
+            <Dependent Role="Using">
+              <PropertyRef Name="StatusID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Using_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Using" Type="Self.Using" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Using">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="GetUserDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UserID" Type="nvarchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="MailboxUsageModelStoreContainer">
+          <EntitySet Name="Mailbox" EntityType="Self.Mailbox" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UsageStatus" EntityType="Self.UsageStatus" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Using" EntityType="Self.Using" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MailboxSendAs" EntityType="Self.MailboxSendAs" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [MailboxSendAs].[MailboxID] AS [MailboxID], 
+    [MailboxSendAs].[MailboxName] AS [MailboxName], 
+    [MailboxSendAs].[MailboxEmail] AS [MailboxEmail], 
+    [MailboxSendAs].[UserID] AS [UserID], 
+    [MailboxSendAs].[UserName] AS [UserName], 
+    [MailboxSendAs].[UserEmail] AS [UserEmail], 
+    [MailboxSendAs].[DelegateAccess] AS [DelegateAccess]
+    FROM [dbo].[MailboxSendAs] AS [MailboxSendAs]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Using_Mailbox" Association="Self.FK_Using_Mailbox">
+            <End Role="Mailbox" EntitySet="Mailbox" />
+            <End Role="Using" EntitySet="Using" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Using_UsageStatus" Association="Self.FK_Using_UsageStatus">
+            <End Role="UsageStatus" EntitySet="UsageStatus" />
+            <End Role="Using" EntitySet="Using" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Using_Users" Association="Self.FK_Using_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Using" EntitySet="Using" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MailboxUsageModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Mailbox">
+          <Key>
+            <PropertyRef Name="MailboxID" />
+          </Key>
+          <Property Name="MailboxID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MailboxName" Type="String" MaxLength="60" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MailboxEmail" Type="String" MaxLength="60" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Usings" Relationship="Self.FK_Using_Mailbox" FromRole="Mailbox" ToRole="Using" />
+        </EntityType>
+        <EntityType Name="UsageStatu">
+          <Key>
+            <PropertyRef Name="StatusID" />
+          </Key>
+          <Property Name="StatusID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StatusName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Usings" Relationship="Self.FK_Using_UsageStatus" FromRole="UsageStatus" ToRole="Using" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="String" MaxLength="60" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FullName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Usings" Relationship="Self.FK_Using_Users" FromRole="Users" ToRole="Using" />
+        </EntityType>
+        <EntityType Name="Using">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MailboxID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UserID" Type="String" MaxLength="60" FixedLength="false" Unicode="true" />
+          <Property Name="StatusID" Type="Int32" />
+          <Property Name="LastUpdated" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Mailbox" Relationship="Self.FK_Using_Mailbox" FromRole="Using" ToRole="Mailbox" />
+          <NavigationProperty Name="UsageStatu" Relationship="Self.FK_Using_UsageStatus" FromRole="Using" ToRole="UsageStatus" />
+          <NavigationProperty Name="User" Relationship="Self.FK_Using_Users" FromRole="Using" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="MailboxSendA">
+          <Key>
+            <PropertyRef Name="MailboxID" />
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="MailboxID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MailboxName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MailboxEmail" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UserID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="UserEmail" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="DelegateAccess" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_Using_Mailbox">
+          <End Role="Mailbox" Type="Self.Mailbox" Multiplicity="0..1" />
+          <End Role="Using" Type="Self.Using" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Mailbox">
+              <PropertyRef Name="MailboxID" />
+            </Principal>
+            <Dependent Role="Using">
+              <PropertyRef Name="MailboxID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Using_UsageStatus">
+          <End Role="UsageStatus" Type="Self.UsageStatu" Multiplicity="0..1" />
+          <End Role="Using" Type="Self.Using" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UsageStatus">
+              <PropertyRef Name="StatusID" />
+            </Principal>
+            <Dependent Role="Using">
+              <PropertyRef Name="StatusID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Using_Users">
+          <End Role="Users" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Using" Type="Self.Using" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Using">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MailboxUsageEntities2" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Mailboxes" EntityType="Self.Mailbox" />
+          <EntitySet Name="UsageStatus" EntityType="Self.UsageStatu" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <EntitySet Name="Usings" EntityType="Self.Using" />
+          <EntitySet Name="MailboxSendAs" EntityType="Self.MailboxSendA" />
+          <AssociationSet Name="FK_Using_Mailbox" Association="Self.FK_Using_Mailbox">
+            <End Role="Mailbox" EntitySet="Mailboxes" />
+            <End Role="Using" EntitySet="Usings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Using_UsageStatus" Association="Self.FK_Using_UsageStatus">
+            <End Role="UsageStatus" EntitySet="UsageStatus" />
+            <End Role="Using" EntitySet="Usings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Using_Users" Association="Self.FK_Using_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Using" EntitySet="Usings" />
+          </AssociationSet>
+          <FunctionImport Name="GetUserDetails" ReturnType="Collection(String)">
+          <Parameter Name="UserID" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MailboxUsageModelStoreContainer" CdmEntityContainer="MailboxUsageEntities2">
+          <EntitySetMapping Name="Mailboxes">
+            <EntityTypeMapping TypeName="MailboxUsageModel.Mailbox">
+              <MappingFragment StoreEntitySet="Mailbox">
+                <ScalarProperty Name="MailboxID" ColumnName="MailboxID" />
+                <ScalarProperty Name="MailboxName" ColumnName="MailboxName" />
+                <ScalarProperty Name="MailboxEmail" ColumnName="MailboxEmail" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UsageStatus">
+            <EntityTypeMapping TypeName="MailboxUsageModel.UsageStatu">
+              <MappingFragment StoreEntitySet="UsageStatus">
+                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
+                <ScalarProperty Name="StatusName" ColumnName="StatusName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="MailboxUsageModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="FullName" ColumnName="FullName" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Usings">
+            <EntityTypeMapping TypeName="MailboxUsageModel.Using">
+              <MappingFragment StoreEntitySet="Using">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="MailboxID" ColumnName="MailboxID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="StatusID" ColumnName="StatusID" />
+                <ScalarProperty Name="LastUpdated" ColumnName="LastUpdated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MailboxSendAs">
+            <EntityTypeMapping TypeName="MailboxUsageModel.MailboxSendA">
+              <MappingFragment StoreEntitySet="MailboxSendAs">
+                <ScalarProperty Name="MailboxID" ColumnName="MailboxID" />
+                <ScalarProperty Name="MailboxName" ColumnName="MailboxName" />
+                <ScalarProperty Name="MailboxEmail" ColumnName="MailboxEmail" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="UserEmail" ColumnName="UserEmail" />
+                <ScalarProperty Name="DelegateAccess" ColumnName="DelegateAccess" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetUserDetails" FunctionName="MailboxUsageModel.Store.GetUserDetails" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

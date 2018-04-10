@@ -157,40 +157,43 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Mailbox.cs">
-      <DependentUpon>MailboxUsageModel.tt</DependentUpon>
+    <Compile Include="HelperClasses\UsageHelper.cs" />
+    <Compile Include="Models\Mailbox.cs">
+      <DependentUpon>MailboxEntities.tt</DependentUpon>
     </Compile>
-    <Compile Include="MailboxUsageModel.Context.cs">
+    <Compile Include="Models\MailboxEntities.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>MailboxUsageModel.Context.tt</DependentUpon>
+      <DependentUpon>MailboxEntities.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="MailboxUsageModel.cs">
+    <Compile Include="Models\MailboxEntities.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>MailboxUsageModel.tt</DependentUpon>
+      <DependentUpon>MailboxEntities.tt</DependentUpon>
     </Compile>
-    <Compile Include="MailboxUsageModel.Designer.cs">
+    <Compile Include="Models\MailboxEntities.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>MailboxUsageModel.edmx</DependentUpon>
+      <DependentUpon>MailboxEntities.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\MailboxSendA.cs">
+      <DependentUpon>MailboxEntities.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Usage.cs" />
+    <Compile Include="Models\UsageStatu.cs">
+      <DependentUpon>MailboxEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\User.cs">
+      <DependentUpon>MailboxEntities.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Using.cs">
+      <DependentUpon>MailboxEntities.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SharedMailbox.cs">
-      <DependentUpon>MailboxUsageModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Users.cs">
-      <DependentUpon>MailboxUsageModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Value.cs">
-      <DependentUpon>MailboxUsageModel.tt</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\app.css" />
@@ -201,19 +204,26 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Images\laoding1.gif" />
+    <Content Include="Images\loading1.gif" />
     <Content Include="Images\logo.png" />
-    <Content Include="MailboxUsageModel.Context.tt">
+    <Content Include="Models\MailboxEntities.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>MailboxUsageModel.Context.cs</LastGenOutput>
-      <DependentUpon>MailboxUsageModel.edmx</DependentUpon>
+      <DependentUpon>MailboxEntities.edmx</DependentUpon>
+      <LastGenOutput>MailboxEntities.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="MailboxUsageModel.edmx.sql" />
-    <Content Include="MailboxUsageModel.tt">
+    <Content Include="Models\MailboxEntities.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>MailboxUsageModel.cs</LastGenOutput>
-      <DependentUpon>MailboxUsageModel.edmx</DependentUpon>
+      <DependentUpon>MailboxEntities.edmx</DependentUpon>
+      <LastGenOutput>MailboxEntities.cs</LastGenOutput>
     </Content>
-    <Content Include="Web.config" />
+    <Content Include="Scripts\JQuery.js" />
+    <Content Include="Scripts\Json2.js" />
+    <Content Include="Scripts\Usage.js" />
+    <Content Include="Scripts\ViewuserDetails.js" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -231,21 +241,18 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <EntityDeploy Include="MailboxUsageModel.edmx">
+    <EntityDeploy Include="Models\MailboxEntities.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>MailboxUsageModel.Designer.cs</LastGenOutput>
+      <LastGenOutput>MailboxEntities.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <Content Include="MailboxUsageModel.edmx.diagram">
-      <DependentUpon>MailboxUsageModel.edmx</DependentUpon>
-      <SubType>Designer</SubType>
+    <Content Include="Models\MailboxEntities.edmx.diagram">
+      <DependentUpon>MailboxEntities.edmx</DependentUpon>
     </Content>
     <None Include="packages.config" />
-    <Content Include="Views\Users\Create.cshtml" />
-    <Content Include="Views\Users\Delete.cshtml" />
-    <Content Include="Views\Users\Details.cshtml" />
-    <Content Include="Views\Users\Edit.cshtml" />
-    <Content Include="Views\Users\Index.cshtml" />
     <Content Include="Views\Home\Result.cshtml" />
+    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
+    <Content Include="Views\Home\ViewUserDetails.cshtml" />
+    <Content Include="Views\Home\_DisplayUserDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

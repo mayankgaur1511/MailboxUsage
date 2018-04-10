@@ -1,0 +1,29 @@
+﻿@{
+	ViewBag.Title = "View User Details";
+}
+
+@*<h2>View User Details</h2>*@
+
+<div class="row">
+
+	<div bgcolor="#ffffff" align="left" valign="bottom" class="center" style="padding: 10px 0px;">
+		
+		@Html.DropDownList("ObjList", (IEnumerable<SelectListItem>)ViewBag.USERS, "-- Please select an user --", new { id = "ddlUsers", @class = "form-control" })
+	</div>
+
+	<div id="partialPlaceHolder" style="display:none;">
+
+	</div>
+
+	<div id="fade"></div>
+	<div id="modal" style="display:none">
+		<p>
+			An update is in progress. Please wait....
+		</p>
+		<img id="loader" src="~/Images/loading1.gif" />
+	</div>
+</div>
+
+<script type="text/javascript" src="~/Scripts/JQuery.js"></script>
+<script type="text/javascript" src="~/Scripts/Json2.js"></script>
+<script src="~/Scripts/ViewuserDetails.js"></script>

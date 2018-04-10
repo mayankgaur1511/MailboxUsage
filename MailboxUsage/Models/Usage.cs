@@ -7,7 +7,7 @@ namespace MailboxUsage.Models
 {
 	public class Usage
 	{
-		public string UMID { get; set; }
+		public string MailBoxID { get; set; }
 
 		public string MailboxName { get; set; }
 
@@ -20,5 +20,6 @@ namespace MailboxUsage.Models
 		public bool IDontKnow { get; set; }
 
 		public int MboxID { get; set; }
+		public string MailboxEmail { get; set; }
 	}
 }

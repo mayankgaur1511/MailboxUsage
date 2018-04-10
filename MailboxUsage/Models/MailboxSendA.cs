@@ -7,15 +7,19 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MailboxUsage
+namespace MailboxUsage.Models
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class Value
+    public partial class MailboxSendA
     {
-        public int Id { get; set; }
-        public string ValueID { get; set; }
-        public string Comment { get; set; }
+        public string MailboxID { get; set; }
+        public string MailboxName { get; set; }
+        public string MailboxEmail { get; set; }
+        public string UserID { get; set; }
+        public string UserName { get; set; }
+        public string UserEmail { get; set; }
+        public string DelegateAccess { get; set; }
     }
 }

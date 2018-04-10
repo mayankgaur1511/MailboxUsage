@@ -7,16 +7,24 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MailboxUsage
+namespace MailboxUsage.Models
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class Users
+    public partial class User
     {
-        public int Id { get; set; }
-        public string UUID { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public User()
+        {
+            this.Usings = new HashSet<Using>();
+        }
+    
+        public string UserID { get; set; }
         public string FullName { get; set; }
         public string Email { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Using> Usings { get; set; }
     }
 }
